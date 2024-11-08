@@ -45,8 +45,15 @@
 import numpy as np
 import tensorflow as tf
 
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Input, Multiply, Lambda, Concatenate
+# from tensorflow.python.keras import Model
+# from tensorflow.python.layers import Input, Multiply, Lambda, Concatenate
+#from keras.layers import Input, Multiply, Lambda, Concatenate
+
+import tf_keras
+
+from tf_keras import Model
+from tf_keras.layers import Input, Multiply, Lambda, Concatenate
+
 
 import sys
 sys.path.append('../')
@@ -123,13 +130,13 @@ def create_model(a, b, Pu,
                                        dtype = myDtype,
                                        initial_damage = d0RNN)
     
-    CDMRNNhybrid = tf.keras.layers.RNN(cell = CDMCellHybrid,
+    CDMRNNhybrid = tf_keras.layers.RNN(cell = CDMCellHybrid,
                                        return_sequences = return_sequences,
                                        return_state = False,
                                        batch_input_shape = batch_input_shape,
                                        unroll = unroll)
     
-    model = tf.keras.Sequential()
+    model = tf_keras.Sequential()
     model.add(CDMRNNhybrid)
-    model.compile(loss='mse', optimizer=tf.keras.optimizers.RMSprop(5e-4), metrics=['mae'])
+    model.compile(loss='mse', optimizer=tf_keras.optimizers.RMSprop(5e-4), metrics=['mae'])
     return model

@@ -1,0 +1,2 @@
+model_checkpoint_path: "RNN_WEIGHTS_RANDOM_PLANE.h5py"
+all_model_checkpoint_paths: "RNN_WEIGHTS_RANDOM_PLANE.h5py"

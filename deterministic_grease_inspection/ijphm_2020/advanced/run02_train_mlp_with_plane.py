@@ -46,11 +46,21 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
-from tensorflow.keras import Sequential
+import tensorflow as tf
 
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.optimizers import RMSprop
-from tensorflow.keras.callbacks import ReduceLROnPlateau
+#from tensorflow.python.keras import Sequential
+
+#from tensorflow.python.keras.layers import Dense
+#from tensorflow.python.keras.optimizers import RMSprop
+#from tensorflow.python.keras.optimizer_v1 import RMSprop
+# from tensorflow.python.keras.callbacks import ReduceLROnPlateau
+
+# from tensorflow.python.keras.optimizers import RMSprop
+
+from tf_keras import Sequential
+from tf_keras.layers import Dense
+from tf_keras.optimizers import RMSprop
+from tf_keras.callbacks import ReduceLROnPlateau
 
 from pinn.layers import getScalingDenseLayer
 
@@ -63,7 +73,7 @@ if __name__ == "__main__":
     def build_model(dLInputScaling):
         model = Sequential([
                 dLInputScaling,
-                Dense(40,activation = 'sigmoid'),
+                Dense(32,activation = 'sigmoid'),#40 by default
                 Dense(20,activation = 'elu'),
                 Dense(10,activation = 'elu'),
                 Dense(5,activation = 'elu'),
@@ -75,9 +85,10 @@ if __name__ == "__main__":
                       metrics=['mean_absolute_error', 'mean_squared_error'])
         return model
     
-    parent_dir = os.path.dirname(os.getcwd())
+    #parent_dir = os.path.dirname(os.getcwd())
+    parent_dir = './'
     
-    dfPlane = pd.read_csv(parent_dir+'\data\\random_plane_set_500_adv.csv')
+    dfPlane = pd.read_csv(parent_dir+'data/random_plane_set_500_adv.csv')
 
     inputsMLPTrain = dfPlane[['Dkappa','dynamicLoads','bearingTemp']]
     inputsMLPTrain_min = inputsMLPTrain.min(axis=0)
@@ -91,7 +102,7 @@ if __name__ == "__main__":
     outputsMLPTrain_range = outputsMLPTrain.max(axis=0) - outputsMLPTrain_min
     outputsMLPTrain_norm = (outputsMLPTrain - outputsMLPTrain_min)/outputsMLPTrain_range
     
-    dfTrueDOE = pd.read_csv(parent_dir+'\data\\true_set_500_adv.csv')
+    dfTrueDOE = pd.read_csv(parent_dir+'/data/true_set_500_adv.csv')
 
     inputsMLPPred = dfTrueDOE[['Dkappa','dynamicLoads','bearingTemp']]
     
@@ -106,7 +117,7 @@ if __name__ == "__main__":
     MLP_EPOCHS = 500
     MLPhistory = MLPmodel.fit(inputsMLPTrain, outputsMLPTrain_norm, epochs=MLP_EPOCHS, verbose=1, callbacks=callbacks_list, validation_data= (inputsMLPPred,outputsMLPPred_norm))
     
-    MLPmodel.save('.\models\MLP_RANDOM_PLANE.h5py')
+    MLPmodel.save('./models/MLP_RANDOM_PLANE.h5py')
     
     MLPresults = MLPmodel.predict(inputsMLPPred)
     
